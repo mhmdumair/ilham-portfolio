@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-heading: var(--font-poppins);
+  --font-sans: var(--font-inter);
+
+  --color-page: #faf9fd;
+  --color-ink: #111827;
+  --color-muted: #6b7280;
+  --color-navy: #0b0f24;
+  --color-navy-soft: #12172f;
+
+  --color-brand-violet: #7c3aed;
+  --color-brand-pink: #ec4899;
+  --color-brand-orange: #f97316;
+  --color-brand-amber: #fbbf24;
+  --color-brand-teal: #14b8a6;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading);
+}
+
+@layer utilities {
+  .text-gradient-brand {
+    background-image: linear-gradient(
+      90deg,
+      var(--color-brand-violet),
+      var(--color-brand-pink),
+      var(--color-brand-orange)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .bg-gradient-brand {
+    background-image: linear-gradient(
+      90deg,
+      var(--color-brand-violet),
+      var(--color-brand-pink),
+      var(--color-brand-orange)
+    );
+  }
+
+  .bg-gradient-hot {
+    background-image: linear-gradient(
+      90deg,
+      var(--color-brand-pink),
+      var(--color-brand-orange),
+      var(--color-brand-amber)
+    );
+  }
+
+  .bg-gradient-footer {
+    background-image: linear-gradient(
+      120deg,
+      #8b2fe0 0%,
+      #ec4899 50%,
+      #fb7a5b 100%
+    );
+  }
+
+  .section-container {
+    max-width: 80rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
