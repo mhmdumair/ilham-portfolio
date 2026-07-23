@@ -13,7 +13,7 @@ export default function MoreWork({ categories, itemsByCategory }) {
   const items = (itemsByCategory[active] || []).slice(0, 8);
 
   return (
-    <section className="relative overflow-hidden bg-navy py-20 sm:py-28">
+    <section className="relative overflow-hidden bg-navy pb-10 pt-20 sm:pb-14 sm:pt-28">
       <Sparkles
         className="pointer-events-none absolute right-10 top-10 text-brand-amber/30"
         size={20}

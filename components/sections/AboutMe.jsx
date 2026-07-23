@@ -5,7 +5,7 @@ import IconBadge from "../ui/IconBadge";
 import SectionLabel from "../ui/SectionLabel";
 import Reveal from "../ui/Reveal";
 
-export default function AboutMe() {
+export default function AboutMe({ settings }) {
   return (
     <section id="about" className="py-20 sm:py-28">
       <div className="section-container">
@@ -16,7 +16,7 @@ export default function AboutMe() {
                 <div className="absolute inset-0 -rotate-6 rounded-[2rem] bg-gradient-brand opacity-80 blur-[2px]" />
                 <div className="relative aspect-[256/280] overflow-hidden rounded-[2rem] ring-4 ring-white">
                   <Image
-                    src="/images/placeholders/about-photo.png"
+                    src={settings.aboutPhoto}
                     alt="Mohamad Ilham, graphic designer"
                     fill
                     className="object-cover"
@@ -34,12 +34,7 @@ export default function AboutMe() {
                 I&apos;m Mohamad Ilham, a <em className="text-gradient-brand not-italic">passionate</em>{" "}
                 graphic designer.
               </h2>
-              <p className="mt-4 text-muted">
-                I help businesses and individuals bring their ideas to life
-                through clean, modern and effective design. Whether it&apos;s
-                a logo, social media post or custom graphic, I focus on
-                quality, creativity and impact.
-              </p>
+              <p className="mt-4 text-muted">{settings.aboutText}</p>
 
               <div className="mt-8 grid grid-cols-3 gap-4">
                 {aboutStats.map((stat) => (

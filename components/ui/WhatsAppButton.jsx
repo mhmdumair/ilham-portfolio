@@ -1,13 +1,23 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { WhatsAppIcon } from "../icons/SocialIcons";
-import { getWhatsAppLink } from "@/lib/contact";
+import { buildWhatsAppLink } from "@/lib/contact";
 
 export default function WhatsAppButton() {
+  const [phone, setPhone] = useState("94771234567");
+
+  useEffect(() => {
+    fetch("/api/settings")
+      .then((res) => res.json())
+      .then((data) => data.whatsapp && setPhone(data.whatsapp))
+      .catch(() => {});
+  }, []);
+
   return (
     <motion.a
-      href={getWhatsAppLink()}
+      href={buildWhatsAppLink(phone)}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat on WhatsApp"

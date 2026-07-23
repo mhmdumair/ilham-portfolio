@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
-import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { Mail, Phone, MapPin, Send, LayoutDashboard } from "lucide-react";
 import {
   FacebookIcon,
   InstagramIcon,
@@ -11,30 +12,49 @@ import {
   WhatsAppIcon,
 } from "../icons/SocialIcons";
 import Reveal from "../ui/Reveal";
-import { getWhatsAppLink } from "@/lib/contact";
+import { buildWhatsAppLink } from "@/lib/contact";
 
-const contactInfo = [
-  { icon: Mail, label: "Email", value: "umairdesigns@email.com", bg: "bg-brand-pink" },
-  { icon: Phone, label: "Phone", value: "+94 77 123 4567", bg: "bg-emerald-500" },
-  { icon: MapPin, label: "Location", value: "Sri Lanka", bg: "bg-brand-violet" },
-  {
-    icon: WhatsAppIcon,
-    label: "WhatsApp",
-    value: "Chat with me directly",
-    bg: "bg-[#25D366]",
-    href: getWhatsAppLink(),
-  },
-];
-
-const socials = [FacebookIcon, InstagramIcon, BehanceIcon, DribbbleIcon];
+const socialIcons = {
+  facebook: FacebookIcon,
+  instagram: InstagramIcon,
+  behance: BehanceIcon,
+  dribbble: DribbbleIcon,
+};
 
 export default function ContactFooter() {
   const [submitted, setSubmitted] = useState(false);
+  const [settings, setSettings] = useState(null);
+
+  useEffect(() => {
+    fetch("/api/settings")
+      .then((res) => res.json())
+      .then(setSettings)
+      .catch(() => {});
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setSubmitted(true);
   };
+
+  const contactInfo = settings
+    ? [
+        { icon: Mail, label: "Email", value: settings.email, bg: "bg-brand-pink" },
+        { icon: Phone, label: "Phone", value: settings.phone, bg: "bg-emerald-500" },
+        { icon: MapPin, label: "Location", value: settings.location, bg: "bg-brand-violet" },
+        {
+          icon: WhatsAppIcon,
+          label: "WhatsApp",
+          value: "Chat with me directly",
+          bg: "bg-[#25D366]",
+          href: buildWhatsAppLink(settings.whatsapp),
+        },
+      ]
+    : [];
+
+  const socials = settings
+    ? Object.entries(settings.socialLinks || {}).filter(([, url]) => url)
+    : [];
 
   return (
     <footer id="contact" className="relative overflow-hidden bg-gradient-footer text-white">
@@ -53,18 +73,23 @@ export default function ContactFooter() {
             </p>
 
             <div className="mt-8 flex gap-3">
-              {socials.map((Icon, i) => (
-                <motion.a
-                  key={i}
-                  href="#"
-                  whileHover={{ scale: 1.1, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  aria-label="social link"
-                  className="grid h-10 w-10 place-items-center rounded-full bg-white/15 backdrop-blur-sm"
-                >
-                  <Icon size={16} />
-                </motion.a>
-              ))}
+              {socials.map(([key, url]) => {
+                const Icon = socialIcons[key];
+                return (
+                  <motion.a
+                    key={key}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.1, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    aria-label={key}
+                    className="grid h-10 w-10 place-items-center rounded-full bg-white/15 backdrop-blur-sm"
+                  >
+                    <Icon size={16} />
+                  </motion.a>
+                );
+              })}
             </div>
           </Reveal>
 
@@ -138,8 +163,15 @@ export default function ContactFooter() {
         </div>
       </div>
 
-      <div className="border-t border-white/15 py-6 text-center text-xs text-white/70">
+      <div className="relative border-t border-white/15 py-6 text-center text-xs text-white/70">
         © {new Date().getFullYear()} Ilham Designs. All Rights Reserved.
+        <Link
+          href="/login"
+          aria-label="Admin login"
+          className="absolute right-6 top-1/2 grid h-7 w-7 -translate-y-1/2 place-items-center rounded-full text-white/30 transition-colors hover:bg-white/10 hover:text-white/70"
+        >
+          <LayoutDashboard size={13} />
+        </Link>
       </div>
     </footer>
   );

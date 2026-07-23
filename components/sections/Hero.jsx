@@ -98,7 +98,7 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        <div className="relative mx-auto h-[360px] w-full max-w-md sm:h-[420px]">
+        <div className="relative mx-auto h-[300px] w-[80%] max-w-md sm:h-[420px] sm:w-full">
           {collageCards.map((card) => (
             <motion.div
               key={card.src}

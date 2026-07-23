@@ -7,7 +7,7 @@ import CountUp from "../ui/CountUp";
 
 export default function ToolsStats() {
   return (
-    <section id="skills" className="relative overflow-hidden bg-navy py-20 sm:py-28">
+    <section id="skills" className="relative overflow-hidden bg-navy pb-20 pt-10 sm:pb-28 sm:pt-14">
       <Plus className="pointer-events-none absolute left-8 top-8 text-white/15" size={16} />
 
       <div className="section-container">

@@ -12,6 +12,8 @@ import ScrollToTop from "@/components/ui/ScrollToTop";
 import WhatsAppButton from "@/components/ui/WhatsAppButton";
 import { getImagesByCategory, getImagesByCategories } from "@/lib/data";
 import { categories } from "@/lib/categories";
+import { getSettings, serializeSettings } from "@/lib/settings";
+import { getApprovedTestimonials } from "@/lib/testimonials";
 
 export const dynamic = "force-dynamic";
 
@@ -20,24 +22,27 @@ export default async function Home() {
     (c) => c.slug !== "logo" && c.slug !== "posts"
   );
 
-  const [logos, posts, moreWorkItems] = await Promise.all([
+  const [logos, posts, moreWorkItems, settingsDoc, testimonialItems] = await Promise.all([
     getImagesByCategory("logo"),
     getImagesByCategory("posts"),
     getImagesByCategories(moreWorkCategories.map((c) => c.slug)),
+    getSettings(),
+    getApprovedTestimonials(),
   ]);
+  const settings = serializeSettings(settingsDoc);
 
   return (
     <>
       <Navbar />
       <main>
         <Hero />
-        <AboutMe />
+        <AboutMe settings={settings} />
         <Services />
         <LogoShowcase items={logos} />
         <PostsShowcase items={posts} />
         <MoreWork categories={moreWorkCategories} itemsByCategory={moreWorkItems} />
         <ToolsStats />
-        <Testimonials />
+        <Testimonials items={testimonialItems} />
       </main>
       <ContactFooter />
       <ScrollToTop />
