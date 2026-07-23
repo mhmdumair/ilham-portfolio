@@ -19,6 +19,8 @@ export default function DashboardApp() {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [formError, setFormError] = useState("");
+  const [dragIndex, setDragIndex] = useState(null);
+  const [savingOrder, setSavingOrder] = useState(false);
 
   const load = useCallback(async (slug) => {
     setLoading(true);
@@ -70,6 +72,31 @@ export default function DashboardApp() {
     if (res.ok) {
       setImages((prev) => prev.filter((img) => img.id !== id));
     }
+  };
+
+  const handleDragStart = (index) => setDragIndex(index);
+
+  const handleDragOver = (e, index) => {
+    e.preventDefault();
+    if (dragIndex === null || dragIndex === index) return;
+    setImages((prev) => {
+      const next = [...prev];
+      const [moved] = next.splice(dragIndex, 1);
+      next.splice(index, 0, moved);
+      return next;
+    });
+    setDragIndex(index);
+  };
+
+  const handleDragEnd = async () => {
+    setDragIndex(null);
+    setSavingOrder(true);
+    await fetch("/api/images/reorder", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ category: active, ids: images.map((img) => img.id) }),
+    });
+    setSavingOrder(false);
   };
 
   const handleLogout = async () => {
@@ -172,16 +199,26 @@ export default function DashboardApp() {
                 <p className="text-sm">No images in this section yet.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-4">
+              <div>
+                <p className="mb-3 text-xs text-muted">
+                  Drag images to reorder.
+                  {savingOrder && <span className="ml-2 text-ink/50">Saving…</span>}
+                </p>
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-4">
                 <AnimatePresence mode="popLayout">
-                  {images.map((img) => (
+                  {images.map((img, index) => (
                     <motion.div
                       key={img.id}
                       layout
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
-                      className="group relative overflow-hidden rounded-xl bg-white shadow ring-1 ring-ink/5"
+                      draggable
+                      onDragStart={() => handleDragStart(index)}
+                      onDragOver={(e) => handleDragOver(e, index)}
+                      onDragEnd={handleDragEnd}
+                      onDrop={(e) => e.preventDefault()}
+                      className="group relative cursor-grab overflow-hidden rounded-xl bg-white shadow ring-1 ring-ink/5 active:cursor-grabbing"
                     >
                       <div className="relative aspect-square w-full">
                         <Image
@@ -210,6 +247,7 @@ export default function DashboardApp() {
                     </motion.div>
                   ))}
                 </AnimatePresence>
+                </div>
               </div>
             )}
           </div>

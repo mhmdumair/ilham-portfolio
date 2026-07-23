@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { services } from "@/data/services";
 import IconBadge from "../ui/IconBadge";
@@ -18,7 +19,10 @@ export default function Services() {
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {services.map((service, i) => (
             <Reveal key={service.title} delay={i * 0.08}>
-              <div className="group h-full rounded-2xl bg-white p-6 shadow-md shadow-ink/5 ring-1 ring-ink/5 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-violet-500/10">
+              <Link
+                href={service.href}
+                className="group block h-full rounded-2xl bg-white p-6 shadow-md shadow-ink/5 ring-1 ring-ink/5 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-violet-500/10"
+              >
                 <IconBadge icon={service.icon} color={service.color} size="lg" />
                 <h3 className="mt-5 font-heading text-lg font-semibold text-ink">
                   {service.title}
@@ -33,7 +37,7 @@ export default function Services() {
                     className="transition-transform group-hover:translate-x-1"
                   />
                 </span>
-              </div>
+              </Link>
             </Reveal>
           ))}
         </div>

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { aboutStats, whatIDo } from "@/data/services";
 import IconBadge from "../ui/IconBadge";
 import SectionLabel from "../ui/SectionLabel";
@@ -59,16 +60,21 @@ export default function AboutMe() {
                 </p>
                 <ul className="mt-4 flex flex-col gap-4">
                   {whatIDo.map((item) => (
-                    <li key={item.title} className="flex items-start gap-3">
-                      <IconBadge icon={item.icon} color={item.color} />
-                      <div>
-                        <p className="text-sm font-semibold text-ink">
-                          {item.title}
-                        </p>
-                        <p className="text-xs text-muted">
-                          {item.description}
-                        </p>
-                      </div>
+                    <li key={item.title}>
+                      <Link
+                        href={item.href}
+                        className="group flex items-start gap-3 rounded-lg -m-1 p-1 transition-colors hover:bg-ink/5"
+                      >
+                        <IconBadge icon={item.icon} color={item.color} />
+                        <div>
+                          <p className="text-sm font-semibold text-ink group-hover:text-brand-violet">
+                            {item.title}
+                          </p>
+                          <p className="text-xs text-muted">
+                            {item.description}
+                          </p>
+                        </div>
+                      </Link>
                     </li>
                   ))}
                 </ul>
